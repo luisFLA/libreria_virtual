@@ -1,0 +1,17 @@
+.btn-primary {
+  background: var(--brand-primary);
+  color: var(--text-inverted);
+  border-radius: var(--radius-xl);
+  padding: .625rem 1rem;
+  transition: filter .15s ease;
+}
+.btn-primary:hover { filter: brightness(0.95); }
+
+.card {
+  background: var(--surface-bg);
+  border: 1px solid var(--surface-border);
+  border-radius: calc(var(--radius-xl) + .25rem);
+  box-shadow: var(--shadow-sm);
+}
+
+.text-muted { color: var(--text-muted); }
