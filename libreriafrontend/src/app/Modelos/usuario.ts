@@ -1,9 +1,6 @@
-export type Rol = 'usuario' | 'administrador';
-
-export interface Usuario {
-  id: string;
-  nombre: string;
-  email: string;
-  rol: Rol;
-  favoritos?: string[];
-}
+export type Usuario = {
+  id_usuario: number;
+  correo: string;
+  password: string;
+  tipo_usuario: "admin" | "cliente";
+};

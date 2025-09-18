@@ -1,36 +1,54 @@
-'use client';
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
-import type { Libro } from '../Modelos/libro';
+"use client";
+import { useCatalogo } from "../Context/catalogo-context";
 
-export default function SearchResults(){
-  const params = useSearchParams();
-  const q = params.get('q')||'';
-  const [items, setItems] = useState<Libro[]>([]);
+function PortadaGenerica() {
+  return <div className="cover" />;
+}
 
-  useEffect(()=>{
-    if(!q) return;
-    fetch(`/api/buscar?q=${encodeURIComponent(q)}`)
-      .then(r=>r.json())
-      .then(d=>setItems(d.resultados||[]));
-  },[q]);
+export default function SearchResults() {
+  const { libros, vista, agregarFavorito, pedirFisico, cargando, error } = useCatalogo();
 
-  if(!q) return <p>Escribe algo para buscar…</p>;
-  if(items.length===0) return <p>No se encontraron resultados para “{q}”.</p>;
+  if (cargando) return <div style={{ padding: 40, textAlign:"center" }}>Cargando…</div>;
+  if (error) return <div style={{ padding: 40, textAlign:"center", color:"#dc2626" }}>{error}</div>;
+  if (!libros.length) return <p className="muted" style={{ padding: 40, textAlign:"center" }}>Sin resultados</p>;
+
+  if (vista === "lista") {
+    return (
+      <ul className="space-y">
+        {libros.map(l => (
+          <li key={l.id_libro} className="card" style={{ display:"flex", alignItems:"center", gap:16 }}>
+            <div className="cover" style={{ width:64, height:96 }}>
+              {/* si tienes URL: <img src={l.portadaUrl} alt={l.titulo}/> */}
+            </div>
+            <div style={{ flex:1 }}>
+              <div className="titulo-libro">{l.titulo}</div>
+              <div className="autor-libro">{l.autor} • {l.genero}</div>
+            </div>
+            <button className="btn" onClick={()=>agregarFavorito(l.id_libro)}>Favorito</button>
+            <button className="btn" onClick={()=>pedirFisico(l.id_libro)}>Pedir</button>
+          </li>
+        ))}
+      </ul>
+    );
+  }
 
   return (
-    <ul className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
-      {items.map(b => (
-        <li key={b.id} className="rounded-2xl border p-4 hover:shadow-sm transition">
-          <h3 className="font-semibold">{b.titulo}</h3>
-          <p className="text-sm opacity-80">{b.autor}</p>
-          <p className="text-xs mt-2">Género: {b.genero} · Año: {b.anio}</p>
-          <div className="mt-3 flex gap-2">
-            <button className="px-3 py-1.5 rounded-full border hover:bg-neutral-50">Favoritos</button>
-            <button className="px-3 py-1.5 rounded-full bg-neutral-900 text-white hover:bg-black">Pedir</button>
+    <div className="grid-products">
+      {libros.map(l => (
+        <div key={l.id_libro} className="card-book">
+          <div className="cover">
+            {/* si tienes URL: <img src={l.portadaUrl} alt={l.titulo}/> */}
           </div>
-        </li>
+          <div className="titulo-libro">{l.titulo}</div>
+          <div className="autor-libro">{l.autor}</div>
+          <div className="genero-libro">{l.genero}</div>
+
+          <div style={{ display:"flex", justifyContent:"space-between", marginTop:12 }}>
+            <button className="btn" onClick={()=>agregarFavorito(l.id_libro)}>Agregar</button>
+            <button className="btn" onClick={()=>pedirFisico(l.id_libro)}>Pedir</button>
+          </div>
+        </div>
       ))}
-    </ul>
+    </div>
   );
 }

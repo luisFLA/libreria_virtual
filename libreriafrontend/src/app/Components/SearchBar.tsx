@@ -1,26 +1,24 @@
-'use client';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+"use client";
+import { useCatalogo } from "../Context/catalogo-context";
 
-export default function SearchBar({placeholder='Busca por título, autor, género'}:{placeholder?:string}){
-  const [q, setQ] = useState('');
-  const router = useRouter();
-
-  function onSubmit(e: React.FormEvent){
-    e.preventDefault();
-    if(q.trim().length === 0) return;
-    router.push(`/buscar?q=${encodeURIComponent(q)}`);
-  }
-
+export default function SearchBar() {
+  const { textoBusqueda, fijarBusqueda } = useCatalogo();
   return (
-    <form onSubmit={onSubmit} className="w-full flex gap-2">
+    <div style={{ position: "relative" }}>
       <input
-        value={q}
-        onChange={(e)=>setQ(e.target.value)}
-        placeholder={placeholder}
-        className="flex-1 rounded-xl border px-4 py-2 outline-none focus:ring-2 ring-neutral-900/20"
+        className="input"
+        style={{ paddingLeft: 38 }}
+        value={textoBusqueda}
+        placeholder="Buscar..."
+        onChange={(e)=>fijarBusqueda(e.target.value)}
       />
-      <button className="px-4 py-2 rounded-xl bg-neutral-900 text-white hover:bg-black">Buscar</button>
-    </form>
+      <span
+        style={{
+          position:"absolute", left: 12, top: "50%", transform:"translateY(-50%)",
+          opacity:.6, pointerEvents:"none"
+        }}
+        aria-hidden
+      >🔎</span>
+    </div>
   );
 }

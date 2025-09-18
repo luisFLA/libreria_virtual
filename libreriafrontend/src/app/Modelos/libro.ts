@@ -1,8 +1,7 @@
-export interface Libro {
-  id: string;
+export type Libro = {
+  id_libro: number;
   titulo: string;
   autor: string;
   genero: string;
-  anio: number;
-  precio?: number;
-}
+  portadaUrl?: string; // opcional para UI
+};

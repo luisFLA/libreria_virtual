@@ -1,27 +1,26 @@
-import Header from './Components/Header';
-import SearchBar from './Components/SearchBar';
+import "./Estilo/inicio.css";
 
-export default function Home() {
+export default function Page() {
   return (
-    <div className="min-h-dvh flex flex-col">
-      <Header/>
-      <main className="mx-auto max-w-6xl px-4 py-16 space-y-8">
-        <section className="grid gap-8 items-center md:grid-cols-2">
-          <div className="space-y-6">
-            <h1 className="text-4xl md:text-5xl font-semibold leading-tight">
-              Páginas con Historia
-            </h1>
-            <p className="opacity-80 max-w-prose">
-              Un lugar donde cada libro abre la puerta a un nuevo mundo…
+    <main>
+      <section className="hero">
+        <div className="container hero__grid">
+          <div>
+            <h1 className="h1">Paginas Con Historia</h1>
+            <p className="muted" style={{ marginTop: 10, maxWidth: 560 }}>
+              Páginas con Historia es más que una librería: es un lugar donde cada libro abre la puerta a un nuevo mundo.
+              Nuestro propósito es conectar a los lectores con historias que inspiran, enseñan y acompañan en cada etapa de la vida.
             </p>
-            <SearchBar/>
+            <div className="hero__cta">
+              <a href="/productos" className="btn btn-primary">LEER MAS…</a>
+            </div>
           </div>
-          <aside className="border rounded-3xl p-8 text-sm opacity-80">
-            <p>Explora categorías, descubre novedades y guarda tus favoritos.</p>
-            <div className="mt-4 h-10 bg-gray-200 rounded-md" />
-          </aside>
-        </section>
-      </main>
-    </div>
+
+          <div className="mosaic">
+            {Array.from({ length: 6 }).map((_, i) => <div key={i} className="demo-cover" />)}
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }

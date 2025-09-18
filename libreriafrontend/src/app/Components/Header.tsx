@@ -1,23 +1,32 @@
-'use client';
-import Link from 'next/link';
-import Logo from './Logo';
+"use client";
+import Link from "next/link";
+import Logo from "./Logo";
+import SearchBar from "./SearchBar";
+import { useAuth } from "../Context/auth-context";
 
 export default function Header() {
+  const { usuario, cerrarSesion } = useAuth();
+
   return (
-    <header className="border-b border-neutral-200 bg-white/80 backdrop-blur sticky top-0 z-50">
-      <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Link href="/"><Logo className="w-20" /></Link>
-          <nav className="hidden md:flex gap-6 text-sm">
-            <Link href="/buscar" className="hover:underline">Buscar</Link>
-            <Link href="/blog" className="hover:underline">Blog</Link>
-            <Link href="/contacto" className="hover:underline">Contáctanos</Link>
-          </nav>
+    <header className="header">
+      <div className="header__inner container">
+        <Link href="/" className="flex items-center"><Logo /></Link>
+
+        <div style={{ flex: 1, marginLeft: 16, marginRight: 16 }}>
+          <SearchBar />
         </div>
-        <div className="flex items-center gap-2">
-          <Link href="/(auth)/login" className="px-3 py-1.5 rounded-full border hover:bg-neutral-50">Iniciar sesión</Link>
-          <Link href="/(auth)/register" className="px-3 py-1.5 rounded-full bg-neutral-900 text-white hover:bg-black">Crear usuario</Link>
-        </div>
+
+        <nav className="flex items-center" style={{ gap: 12 }}>
+          <Link href="/productos" className="muted">Productos</Link>
+
+          {usuario ? (
+            <button onClick={cerrarSesion} className="btn">Salir</button>
+          ) : (
+            <Link href="/login" className="btn">Cuenta</Link>
+          )}
+          <button className="btn" aria-label="Carrito">🛒</button>
+          <button className="btn" aria-label="Favoritos">❤️</button>
+        </nav>
       </div>
     </header>
   );
