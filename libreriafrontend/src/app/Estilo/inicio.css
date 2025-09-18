@@ -1,0 +1,13 @@
+.hero { padding: 28px 0; border-bottom: 1px solid var(--surface-border); }
+.hero__grid { display:grid; gap:32px; }
+@media (min-width: 900px){ .hero__grid{ grid-template-columns: 1.1fr .9fr; } }
+.hero__title { composes: h1; } /* si tu editor no soporta "composes", ignora; es sólo semántico */
+
+.mosaic { display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; }
+.demo-cover {
+  aspect-ratio: 2/3;
+  border-radius: 20px;
+  background: linear-gradient(135deg,#ffb86b 0%,#ff9e58 45%,#ff86c9 100%);
+  box-shadow: 0 12px 30px rgba(17,24,39,.12);
+}
+.hero__cta { margin-top: 16px; }
