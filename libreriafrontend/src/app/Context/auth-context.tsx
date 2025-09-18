@@ -4,9 +4,10 @@ import { api } from "../lib/api";
 import type { Usuario } from "../Modelos/usuario";
 
 type Ctx = {
-  usuario?: Usuario;
+  usuario: Usuario | null;
   cargando: boolean;
   error?: string;
+  listo: boolean; // ✅ ya leí localStorage
   iniciarSesion: (correo: string, password: string) => Promise<void>;
   cerrarSesion: () => void;
 };
@@ -14,13 +15,18 @@ type Ctx = {
 const AuthContext = createContext<Ctx | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [usuario, setUsuario] = useState<Usuario | undefined>();
+  const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [cargando, setCargando] = useState(false);
   const [error, setError] = useState<string | undefined>();
+  const [listo, setListo] = useState(false);
 
   useEffect(() => {
-    const raw = localStorage.getItem("lv:usuario");
-    if (raw) setUsuario(JSON.parse(raw));
+    try {
+      const raw = typeof window !== "undefined" ? localStorage.getItem("lv:usuario") : null;
+      if (raw) setUsuario(JSON.parse(raw));
+    } finally {
+      setListo(true);
+    }
   }, []);
 
   const iniciarSesion = async (correo: string, password: string) => {
@@ -35,13 +41,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setError(e.message || "No se pudo iniciar sesión");
     } finally {
       setCargando(false);
+      setListo(true);
     }
   };
 
-  const cerrarSesion = () => { localStorage.removeItem("lv:usuario"); setUsuario(undefined); };
+  const cerrarSesion = () => {
+    localStorage.removeItem("lv:usuario");
+    setUsuario(null);
+  };
 
   return (
-    <AuthContext.Provider value={{ usuario, cargando, error, iniciarSesion, cerrarSesion }}>
+    <AuthContext.Provider value={{ usuario, cargando, error, listo, iniciarSesion, cerrarSesion }}>
       {children}
     </AuthContext.Provider>
   );

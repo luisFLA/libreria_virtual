@@ -19,11 +19,14 @@ export default function Header() {
         <nav className="flex items-center" style={{ gap: 12 }}>
           <Link href="/productos" className="muted">Productos</Link>
 
-          {usuario ? (
+          {/* Siempre manda a /cuenta */}
+          <Link href="/cuenta" className="btn">Cuenta</Link>
+
+          {/* Si hay sesión, además muestra "Salir" */}
+          {usuario && (
             <button onClick={cerrarSesion} className="btn">Salir</button>
-          ) : (
-            <Link href="/login" className="btn">Cuenta</Link>
           )}
+
           <button className="btn" aria-label="Carrito">🛒</button>
           <button className="btn" aria-label="Favoritos">❤️</button>
         </nav>
