@@ -6,6 +6,7 @@ import "./Estilo/productos.css";
 
 import Proveedores from "./Providers";
 import Header from "./Components/Header";
+import Logo from "./Components/Logo";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -20,7 +21,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Proveedores>
           <Header />
           {children}
-          <footer>© {new Date().getFullYear()} Páginas con Historia</footer>
+          <footer style={{ background: '#fff6f0', borderTop: '1px solid #eee', marginTop: 32 }}>
+            <div className="container" style={{ textAlign: 'center', padding: '24px 0', color: '#888', fontSize: 15 }}>
+              <span style={{ fontWeight: 600, color: '#ff7e29' }}>PÁGINAS CON HISTORIA</span> &nbsp;|&nbsp; © {new Date().getFullYear()}<br />
+              <a href="/" style={{ color: '#ff7e29', margin: '0 8px' }}>Inicio</a>
+              <a href="/productos" style={{ color: '#ff7e29', margin: '0 8px' }}>Catálogo</a>
+              <a href="/cuenta" style={{ color: '#ff7e29', margin: '0 8px' }}>Mi cuenta</a>
+            </div>
+          </footer>
         </Proveedores>
       </body>
     </html>
