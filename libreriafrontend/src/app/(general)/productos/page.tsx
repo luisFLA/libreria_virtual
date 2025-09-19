@@ -8,17 +8,12 @@ export default function ProductosPage() {
   const { ordenarPor, fijarFiltros, vista, cambiarVista, limite, total } = useCatalogo();
   const [precioMin, setPrecioMin] = useState("");
   const [precioMax, setPrecioMax] = useState("");
-  const [editorial, setEditorial] = useState("");
-  const [color, setColor] = useState("");
-  const [material, setMaterial] = useState("");
+  // Solo filtro por precio
 
   const aplicarFiltros = () => {
     fijarFiltros({
       precioMin: precioMin ? Number(precioMin) : undefined,
       precioMax: precioMax ? Number(precioMax) : undefined,
-      filtroEditorial: editorial,
-      filtroColor: color,
-      filtroMaterial: material,
     });
   };
 
@@ -55,16 +50,10 @@ export default function ProductosPage() {
             </div>
             <button className="btn" style={{ width:"100%", marginTop:10 }} onClick={aplicarFiltros}>Filtro</button>
           </div>
-          <div className="sidebar__box"><h3>Tipo de Producto</h3><div className="muted">—</div></div>
-          <div className="sidebar__box"><h3>Disponibilidad</h3><div className="muted">—</div></div>
-          <div className="sidebar__box"><h3>Editorial</h3><input className="input" placeholder="Filtrar por editorial" value={editorial} onChange={e=>setEditorial(e.target.value)} /></div>
-          <div className="sidebar__box"><h3>Color</h3><input className="input" placeholder="Filtrar por color" value={color} onChange={e=>setColor(e.target.value)} /></div>
-          <div className="sidebar__box"><h3>Material</h3><input className="input" placeholder="Filtrar por material" value={material} onChange={e=>setMaterial(e.target.value)} /></div>
         </aside>
 
         <section>
           <SearchResults />
-          {/* Paginación visual */}
           <div className="paginacion">
             <button aria-label="Anterior">←</button>
             <button className="activo">1</button>

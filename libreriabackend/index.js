@@ -191,10 +191,12 @@ app.post('/favoritos', async (req, res) => {
     }
 });
 
-app.delete('/favoritos/:id', async (req, res) => {
+
+app.delete('/favoritos/:id_usuario/:id_libro', async (req, res) => {
     try {
+        const { id_usuario, id_libro } = req.params;
         const deleted = await Favoritos.destroy({
-            where: { id_favorito: req.params.id }
+            where: { id_usuario, id_libro }
         });
         if (deleted) {
             res.status(204).json({ message: 'Favorito eliminado' });

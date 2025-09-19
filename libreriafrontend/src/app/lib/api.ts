@@ -17,6 +17,16 @@ export const api = {
   crearFavorito: (id_usuario: number, id_libro: number, valoracion = 5, comentario = "") =>
     pedir("/favoritos", { method: "POST", body: JSON.stringify({ id_usuario, id_libro, valoracion, comentario }) }),
 
+  eliminarFavorito: (id_usuario: number, id_libro: number) =>
+    fetch(`${BASE}/favoritos/${id_usuario}/${id_libro}`, { method: "DELETE" })
+      .then(res => {
+        if (!res.ok && res.status !== 204) throw new Error("No se pudo eliminar favorito");
+        return { ok: true };
+      }),
+
+  pedirFavoritosUsuario: (id_usuario: number) =>
+    pedir(`/favoritos/usuario/${id_usuario}`),
+
   crearPedido: (id_usuario: number, id_libro: number, ejemplar_fisico = true, precio = 0) =>
     pedir("/pedidos", { method: "POST", body: JSON.stringify({ id_usuario, id_libro, ejemplar_fisico, precio }) }),
   registrarUsuario: (data: { correo: string; password: string; tipo_usuario: string }) =>

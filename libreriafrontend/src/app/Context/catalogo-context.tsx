@@ -28,7 +28,6 @@ type Ctx = Estado & {
   fijarFiltros: (p: Partial<Estado>) => void;
   cambiarVista: (v: "cuadricula" | "lista") => void;
   irPagina: (n: number) => void;
-  agregarFavorito: (id_libro: number) => Promise<void>;
   pedirFisico: (id_libro: number) => Promise<void>;
   recargar: () => Promise<void>;
 };
@@ -73,10 +72,6 @@ export function CatalogoProvider({ children }: { children: React.ReactNode }) {
   const irPagina = (n: number) => setS(x => ({ ...x, pagina: n }));
   const recargar = async () => cargar();
 
-  const agregarFavorito = async (id_libro: number) => {
-    if (!usuario) throw new Error("Inicia sesión para favoritos");
-    await api.crearFavorito(usuario.id_usuario, id_libro);
-  };
   const pedirFisico = async (id_libro: number) => {
     if (!usuario) throw new Error("Inicia sesión para pedir ejemplar");
     await api.crearPedido(usuario.id_usuario, id_libro, true, 0);
@@ -105,7 +100,7 @@ export function CatalogoProvider({ children }: { children: React.ReactNode }) {
       ...s,
       libros: pagina,
       total: filtrados.length,
-      fijarBusqueda, fijarFiltros, cambiarVista, irPagina, agregarFavorito, pedirFisico, recargar
+  fijarBusqueda, fijarFiltros, cambiarVista, irPagina, pedirFisico, recargar
     }}>
       {children}
     </CatalogoContext.Provider>
