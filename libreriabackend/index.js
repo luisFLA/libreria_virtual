@@ -3,7 +3,7 @@ const app = express();
 const cors = require('cors');
 const sequelize = require('./Connection/database');
 const defineUsuario = require('./models/usuario');
-const defineLibro = require('./models/libro');
+const defineLibro = require('./Models/libro');
 const defineFavoritos = require('./models/favoritos');
 const definePedidos = require('./models/pedidos');
 
@@ -56,9 +56,15 @@ app.get('/usuarios', async (req, res) => {
     }
 });
 
+const { QueryTypes } = require('sequelize');
+const crypto = require('crypto');
+
 app.post('/usuarios', async (req, res) => {
     try {
-        const nuevoUsuario = await Usuario.create(req.body);
+        // Encriptar la contraseña usando md5 (igual que MySQL)
+        const { correo, password, tipo_usuario } = req.body;
+        const passwordMd5 = crypto.createHash('md5').update(password).digest('hex');
+        const nuevoUsuario = await Usuario.create({ correo, password: passwordMd5, tipo_usuario });
         res.status(201).json(nuevoUsuario);
     } catch (error) {
         res.status(400).json({ error: 'Error al crear el usuario' });

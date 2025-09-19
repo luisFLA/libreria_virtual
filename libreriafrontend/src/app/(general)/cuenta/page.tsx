@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "../../Context/auth-context";
 
 export default function CuentaPage() {
-  const { usuario } = useAuth();
+  const { usuario, cerrarSesion } = useAuth();
   const router = useRouter();
 
   // Si no hay sesión, manda a login
@@ -32,6 +32,10 @@ export default function CuentaPage() {
         <h2 style={{ marginTop: 0, marginBottom: 8 }}>Datos del usuario</h2>
         <p><strong>Correo:</strong> {usuario.correo}</p>
         <p><strong>Tipo:</strong> {usuario.tipo_usuario}</p>
+        <button className="btn" style={{ marginTop: 16, background: '#ff7e29', color: '#fff' }} onClick={() => {
+          cerrarSesion();
+          router.replace("/login");
+        }}>Cerrar sesión</button>
       </section>
 
       <section className="card">

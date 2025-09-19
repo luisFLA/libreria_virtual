@@ -1,11 +1,13 @@
 "use client";
 import { useAuth } from "../Context/auth-context";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
   const { iniciarSesion, cargando, error } = useAuth();
   const [correo, setCorreo] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
 
   return (
     <div className="card" style={{ maxWidth: 420, margin: "0 auto", width: "100%" }}>
@@ -19,8 +21,16 @@ export default function LoginForm() {
              value={password} onChange={e=>setPassword(e.target.value)} />
 
       <div style={{ height: 12 }} />
-      <button onClick={()=>iniciarSesion(correo,password)} disabled={cargando}
-              className="btn btn-primary" style={{ width: "100%" }}>
+      <button
+        onClick={async ()=>{
+          await iniciarSesion(correo,password);
+          // Si no hay error, redirige
+          if (!error) router.replace("/cuenta");
+        }}
+        disabled={cargando}
+        className="btn btn-primary"
+        style={{ width: "100%" }}
+      >
         {cargando ? "Ingresando..." : "Entrar"}
       </button>
 

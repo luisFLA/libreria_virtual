@@ -15,6 +15,11 @@ type Estado = {
   total: number;
   filtroGenero?: string;
   filtroAutor?: string;
+  filtroEditorial?: string;
+  filtroColor?: string;
+  filtroMaterial?: string;
+  precioMin?: number;
+  precioMax?: number;
   ordenarPor: "AZ" | "ZA";
 };
 
@@ -37,6 +42,11 @@ const inicial: Estado = {
   libros: [],
   total: 0,
   ordenarPor: "AZ",
+  filtroEditorial: "",
+  filtroColor: "",
+  filtroMaterial: "",
+  precioMin: undefined,
+  precioMax: undefined,
 };
 
 const CatalogoContext = createContext<Ctx | undefined>(undefined);
@@ -76,11 +86,16 @@ export function CatalogoProvider({ children }: { children: React.ReactNode }) {
     let arr = [...s.libros];
     const q = s.textoBusqueda.trim().toLowerCase();
     if (q) arr = arr.filter(l => l.titulo.toLowerCase().includes(q) || l.autor.toLowerCase().includes(q) || l.genero.toLowerCase().includes(q));
-    if (s.filtroGenero) arr = arr.filter(l => l.genero.toLowerCase().includes(s.filtroGenero!.toLowerCase()));
-    if (s.filtroAutor) arr = arr.filter(l => l.autor.toLowerCase().includes(s.filtroAutor!.toLowerCase()));
+    if (s.filtroGenero) arr = arr.filter(l => l.genero && l.genero.toLowerCase().includes(s.filtroGenero!.toLowerCase()));
+    if (s.filtroAutor) arr = arr.filter(l => l.autor && l.autor.toLowerCase().includes(s.filtroAutor!.toLowerCase()));
+    if (s.filtroEditorial) arr = arr.filter(l => (l.editorial || "").toLowerCase().includes(s.filtroEditorial!.toLowerCase()));
+    if (s.filtroColor) arr = arr.filter(l => (l.color || "").toLowerCase().includes(s.filtroColor!.toLowerCase()));
+    if (s.filtroMaterial) arr = arr.filter(l => (l.material || "").toLowerCase().includes(s.filtroMaterial!.toLowerCase()));
+    if (typeof s.precioMin === "number") arr = arr.filter(l => typeof l.precio === "number" && l.precio >= s.precioMin!);
+    if (typeof s.precioMax === "number") arr = arr.filter(l => typeof l.precio === "number" && l.precio <= s.precioMax!);
     if (s.ordenarPor === "AZ") arr.sort((a,b)=>a.titulo.localeCompare(b.titulo)); else arr.sort((a,b)=>b.titulo.localeCompare(a.titulo));
     return arr;
-  }, [s.libros, s.textoBusqueda, s.filtroGenero, s.filtroAutor, s.ordenarPor]);
+  }, [s.libros, s.textoBusqueda, s.filtroGenero, s.filtroAutor, s.filtroEditorial, s.filtroColor, s.filtroMaterial, s.precioMin, s.precioMax, s.ordenarPor]);
 
   const desde = (s.pagina - 1) * s.limite;
   const pagina = filtrados.slice(desde, desde + s.limite);
