@@ -1,0 +1,27 @@
+{
+  "dependencies": {
+    "next": "^15.5.3"
+  },
+  "name": "libreria_virtual",
+  "version": "1.0.0",
+  "description": "trabajo de grupo 3",
+  "main": "index.js",
+  "devDependencies": {
+    "@types/node": "^24.5.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "next dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luisFLA/libreria_virtual.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/luisFLA/libreria_virtual/issues"
+  },
+  "homepage": "https://github.com/luisFLA/libreria_virtual#readme"
+}

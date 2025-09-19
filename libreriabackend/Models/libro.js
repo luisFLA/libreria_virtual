@@ -18,7 +18,16 @@ module.exports = (sequelize) => {
         genero: {
             type: DataTypes.STRING(50),
             allowNull: false
-        }
+        },
+        precio: {
+            type: DataTypes.DECIMAL(10,2),
+            allowNull: false,
+            defaultValue: 0
+        },
+        portadaUrl: {
+            type: DataTypes.STRING(255),
+            allowNull: true
+        },
     }, {
         tableName: 'Libro',
         timestamps: false

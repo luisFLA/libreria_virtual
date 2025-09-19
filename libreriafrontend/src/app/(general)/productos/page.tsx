@@ -1,28 +1,46 @@
 "use client";
 import "../../Estilo/productos.css";
-import SearchResults from "../../Components/SearchResults";
 import { useCatalogo } from "../../Context/catalogo-context";
+import { useState } from "react";
+import SearchResults from "../../Components/SearchResults";
 
-export default function Productos() {
+export default function ProductosPage() {
   const { ordenarPor, fijarFiltros, vista, cambiarVista, limite, total } = useCatalogo();
+  const [precioMin, setPrecioMin] = useState("");
+  const [precioMax, setPrecioMax] = useState("");
+  const [editorial, setEditorial] = useState("");
+  const [color, setColor] = useState("");
+  const [material, setMaterial] = useState("");
+
+  const aplicarFiltros = () => {
+    fijarFiltros({
+      precioMin: precioMin ? Number(precioMin) : undefined,
+      precioMax: precioMax ? Number(precioMax) : undefined,
+      filtroEditorial: editorial,
+      filtroColor: color,
+      filtroMaterial: material,
+    });
+  };
 
   return (
     <main className="container" style={{ padding: "24px 0" }}>
       <div className="breadcrumb">HOME / PRODUCTS</div>
 
       <div className="productos__head">
-        <div className="muted">Mostrando {total} resultados</div>
-        <div style={{ display:"flex", gap:12, alignItems:"center" }}>
-          <select value={ordenarPor} onChange={(e)=>fijarFiltros({ ordenarPor: e.target.value as any })} className="input" style={{ width: 220 }}>
-            <option value="AZ">Mostrar por Alfabéticamente, A-Z</option>
-            <option value="ZA">Mostrar por Alfabéticamente, Z-A</option>
+        <div className="muted">Mostrar por:
+          <select value={ordenarPor} onChange={(e)=>fijarFiltros({ ordenarPor: e.target.value as any })} className="input" style={{ width: 180, marginLeft: 8 }}>
+            <option value="AZ">Alfabéticamente, A-Z</option>
+            <option value="ZA">Alfabéticamente, Z-A</option>
           </select>
-          <select value={limite} onChange={(e)=>fijarFiltros({ limite: Number(e.target.value) })} className="input" style={{ width: 140 }}>
-            {[12,24,36].map(n => <option key={n} value={n}>Show: {n}</option>)}
+        </div>
+        <div className="muted">Mostrar 1-12 de {total} resultados</div>
+        <div style={{ display:"flex", gap:12, alignItems:"center" }}>
+          <select value={limite} onChange={(e)=>fijarFiltros({ limite: Number(e.target.value) })} className="input" style={{ width: 100 }}>
+            {[12,24,36].map(n => <option key={n} value={n}>{n}</option>)}
           </select>
           <div className="view-switch">
-            <button onClick={()=>cambiarVista("cuadricula")} className={vista==="cuadricula" ? "activo" : ""}>▦</button>
-            <button onClick={()=>cambiarVista("lista")} className={vista==="lista" ? "activo" : ""}>≣</button>
+            <button onClick={()=>cambiarVista("cuadricula")} className={vista==="cuadricula" ? "activo" : ""} aria-label="Vista cuadricula">▦</button>
+            <button onClick={()=>cambiarVista("lista")} className={vista==="lista" ? "activo" : ""} aria-label="Vista lista">≣</button>
           </div>
         </div>
       </div>
@@ -32,20 +50,28 @@ export default function Productos() {
           <div className="sidebar__box" style={{ marginBottom: 12 }}>
             <h3>Precio</h3>
             <div className="flex" style={{ gap:8 }}>
-              <input className="input" placeholder="L 0" />
-              <input className="input" placeholder="L 9999" />
+              <input className="input" placeholder="L. 0" value={precioMin} onChange={e=>setPrecioMin(e.target.value.replace(/[^\d]/g, ""))} />
+              <input className="input" placeholder="L. 9999" value={precioMax} onChange={e=>setPrecioMax(e.target.value.replace(/[^\d]/g, ""))} />
             </div>
-            <button className="btn" style={{ width:"100%", marginTop:10 }}>Filtro</button>
+            <button className="btn" style={{ width:"100%", marginTop:10 }} onClick={aplicarFiltros}>Filtro</button>
           </div>
           <div className="sidebar__box"><h3>Tipo de Producto</h3><div className="muted">—</div></div>
           <div className="sidebar__box"><h3>Disponibilidad</h3><div className="muted">—</div></div>
-          <div className="sidebar__box"><h3>Editorial</h3><input className="input" placeholder="Filtrar por editorial" /></div>
-          <div className="sidebar__box"><h3>Color</h3><input className="input" placeholder="Filtrar por color" /></div>
-          <div className="sidebar__box"><h3>Material</h3><input className="input" placeholder="Filtrar por material" /></div>
+          <div className="sidebar__box"><h3>Editorial</h3><input className="input" placeholder="Filtrar por editorial" value={editorial} onChange={e=>setEditorial(e.target.value)} /></div>
+          <div className="sidebar__box"><h3>Color</h3><input className="input" placeholder="Filtrar por color" value={color} onChange={e=>setColor(e.target.value)} /></div>
+          <div className="sidebar__box"><h3>Material</h3><input className="input" placeholder="Filtrar por material" value={material} onChange={e=>setMaterial(e.target.value)} /></div>
         </aside>
 
         <section>
           <SearchResults />
+          {/* Paginación visual */}
+          <div className="paginacion">
+            <button aria-label="Anterior">←</button>
+            <button className="activo">1</button>
+            <button>2</button>
+            <button>3</button>
+            <button aria-label="Siguiente">→</button>
+          </div>
         </section>
       </div>
     </main>

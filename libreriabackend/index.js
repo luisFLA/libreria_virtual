@@ -3,7 +3,7 @@ const app = express();
 const cors = require('cors');
 const sequelize = require('./Connection/database');
 const defineUsuario = require('./models/usuario');
-const defineLibro = require('./models/libro');
+const defineLibro = require('./Models/libro');
 const defineFavoritos = require('./models/favoritos');
 const definePedidos = require('./models/pedidos');
 
@@ -44,6 +44,49 @@ sequelize.sync()
 //             COMIENZO DE API
 // ===================================
 
+
+// ===================================
+//             RUTAS DE LOGIN
+// ===================================
+
+
+
+app.post('/login', async (req, res) => {
+    try {
+        const { correo, password } = req.body;
+        if (!correo || !password) {
+            return res.status(400).json({ error: 'Correo y contraseña son requeridos' });
+        }
+
+        // Encriptar el password con md5 para comparar
+        const passwordMd5 = crypto.createHash('md5').update(password).digest('hex');
+
+        // Buscar usuario
+        const usuario = await Usuario.findOne({
+            where: { correo, password: passwordMd5 }
+        });
+
+        if (!usuario) {
+            return res.status(401).json({ error: 'Credenciales inválidas' });
+        }
+
+        // Aquí podrías generar un token JWT en lugar de devolver el usuario directamente
+        res.status(200).json({
+            message: 'Login exitoso',
+            usuario: {
+                id: usuario.id_usuario,
+                correo: usuario.correo,
+                tipo_usuario: usuario.tipo_usuario
+            }
+        });
+
+    } catch (error) {
+        res.status(500).json({ error: 'Error en el servidor al iniciar sesión' });
+    }
+});
+
+
+
 // ===================================
 //             RUTAS DE USUARIOS
 // ===================================
@@ -56,9 +99,15 @@ app.get('/usuarios', async (req, res) => {
     }
 });
 
+const { QueryTypes } = require('sequelize');
+const crypto = require('crypto');
+
 app.post('/usuarios', async (req, res) => {
     try {
-        const nuevoUsuario = await Usuario.create(req.body);
+        // Encriptar la contraseña usando md5 (igual que MySQL)
+        const { correo, password, tipo_usuario } = req.body;
+        const passwordMd5 = crypto.createHash('md5').update(password).digest('hex');
+        const nuevoUsuario = await Usuario.create({ correo, password: passwordMd5, tipo_usuario });
         res.status(201).json(nuevoUsuario);
     } catch (error) {
         res.status(400).json({ error: 'Error al crear el usuario' });
@@ -157,20 +206,19 @@ app.delete('/libros/:id', async (req, res) => {
 // ===================================
 app.get('/favoritos', async (req, res) => {
     try {
-        const favoritos = await Favoritos.findAll({
-            include: [{ model: Libro }]
-        });
+        const favoritos = await Favoritos.findAll({ include: [Libro] });
         res.json(favoritos);
     } catch (error) {
         res.status(500).json({ error: 'Error al obtener favoritos' });
     }
 });
 
+// Obtener favoritos por usuario (nuevo)
 app.get('/favoritos/usuario/:id', async (req, res) => {
     try {
         const favoritos = await Favoritos.findAll({
             where: { id_usuario: req.params.id },
-            include: [{ model: Libro }]
+            include: [Libro]
         });
         res.json(favoritos);
     } catch (error) {
@@ -189,14 +237,9 @@ app.post('/favoritos', async (req, res) => {
 
 app.delete('/favoritos/:id', async (req, res) => {
     try {
-        const deleted = await Favoritos.destroy({
-            where: { id_favorito: req.params.id }
-        });
-        if (deleted) {
-            res.status(204).json({ message: 'Favorito eliminado' });
-        } else {
-            res.status(404).json({ error: 'Favorito no encontrado' });
-        }
+        const deleted = await Favoritos.destroy({ where: { id_favorito: req.params.id } });
+        if (!deleted) return res.status(404).json({ error: 'Favorito no encontrado' });
+        res.status(200).json({ message: 'Favorito eliminado' });
     } catch (error) {
         res.status(500).json({ error: 'Error al eliminar el favorito' });
     }
@@ -259,6 +302,6 @@ app.delete('/pedidos/:id', async (req, res) => {
 
 
 
-app.listen(3000, () => {
-    console.log('Server started on port 3000');
+app.listen(8000, () => {
+    console.log('Server started on port 8000');
 });
