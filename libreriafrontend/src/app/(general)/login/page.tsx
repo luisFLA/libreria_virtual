@@ -3,7 +3,9 @@ import "../../Estilo/login.css";
 import LoginForm from "../../Components/LoginForm";
 import Link from "next/link";
 
+
 export default function LoginPage() {
+
   return (
     <main style={{ minHeight: '70vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(90deg,#fff6f0 0%,#fff 100%)' }}>
       <div className="login__grid" style={{ width: '100%', maxWidth: 950, boxShadow: '0 8px 32px rgba(0,0,0,.07)', borderRadius: 24, overflow: 'hidden', background: '#fff' }}>

@@ -3,7 +3,7 @@ const { Sequelize } = require('sequelize');
 const sequelize = new Sequelize(
     'libreria', // nombre de base de datos
     'root', // usuario
-    '0000', // password
+    'admin123', // password
     {
         host: 'localhost',
         port: 3306,

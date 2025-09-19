@@ -20,6 +20,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [error, setError] = useState<string | undefined>();
   const [listo, setListo] = useState(false);
 
+
+
   useEffect(() => {
     try {
       const raw = typeof window !== "undefined" ? localStorage.getItem("lv:usuario") : null;

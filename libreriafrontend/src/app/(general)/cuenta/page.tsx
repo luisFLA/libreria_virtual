@@ -42,8 +42,8 @@ export default function CuentaPage() {
         <h2 style={{ marginTop: 0, marginBottom: 8 }}>Acciones rápidas</h2>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
           <a href="/productos" className="btn">Ir al catálogo</a>
-          <a href="/productos" className="btn">Ver favoritos</a>
-          <a href="/productos" className="btn">Ver pedidos</a>
+          <a href="/favoritos" className="btn">Ver favoritos</a>
+          <a href="/pedidos" className="btn">Ver pedidos</a>
         </div>
       </section>
     </main>

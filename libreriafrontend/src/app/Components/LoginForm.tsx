@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
-  const { iniciarSesion, cargando, error } = useAuth();
+  const { iniciarSesion, cargando, error} = useAuth();
   const [correo, setCorreo] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
